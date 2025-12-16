@@ -4,7 +4,7 @@ A full-stack habit tracking application built with Next.js, TypeScript, PostgreS
 
 ## 🚀 Deployed Application
 
-**Live URL**: [Your Vercel App URL]
+**Live URL**: [https://habit-tracker-flax-eight.vercel.app/](https://habit-tracker-flax-eight.vercel.app/)
 
 ## 🔑 Login Credentials
 
@@ -164,25 +164,29 @@ This will:
   - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
   - Optional: SMTP variables for email notifications
 
-### 3. Setup Production Database
+### 3. Setup Production Database (One-Time Only)
 
-After deployment, run these commands locally:
+**Note:** This step is only needed once during initial deployment. The database and data persist across all future redeployments.
+
+After first deployment, run these commands locally:
 
 ```bash
-# Install Vercel CLI
+# Install Vercel CLI (if not already installed)
 npm i -g vercel
 
 # Pull environment variables from Vercel
 vercel env pull .env.production
 
-# Create database tables
+# Create database tables (one-time)
 npx prisma db push
 
-# Seed with test users including reviewer account
+# Seed with test users including reviewer account (one-time)
 npx prisma db seed
 ```
 
 Your application is now deployed and ready to use!
+
+**For subsequent deployments:** Just push your code changes to GitHub. Vercel will automatically redeploy. No database setup needed.
 
 ---
 
