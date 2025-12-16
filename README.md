@@ -6,7 +6,17 @@ A full-stack habit tracking application built with Next.js, TypeScript, PostgreS
 
 **Deployed URL**: [Coming Soon / Your Deployment URL Here]
 
-> **Note**: Update this section with your actual deployment URL after deploying to Vercel, Railway, or other platforms.
+## 🔑 Reviewer Access
+
+For quick access to test the application, use the pre-configured credentials:
+
+📄 **See [CREDENTIALS.md](./CREDENTIALS.md)** for login details and testing instructions.
+
+**Quick Login:**
+- Email: `reviewer@demo.com`
+- Password: `Review123`
+
+> **Note**: Update this section with your actual deployment URL after deploying to Vercel.
 
 ## Tech Stack
 
@@ -252,100 +262,69 @@ curl -H "Authorization: Bearer your-secret-token" \
   "reminders": [
     {
 
-## Deployment
+## Deployment to Vercel
 
-### Deploying to Vercel
-
-1. **Push to GitHub**:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin your-repo-url
-   git push -u origin main
-   ```
-
-2. **Configure Database**:
-   - Use [Neon](https://neon.tech/), [Supabase](https://supabase.com/), or [Railway](https://railway.app/) for PostgreSQL
-   - Copy your database connection string
-
-3. **Deploy to Vercel**:
-   - Visit [vercel.com](https://vercel.com) and import your GitHub repository
-   - Add environment variables in Vercel dashboard:
-     - `DATABASE_URL` - Your cloud database URL
-     - `NEXTAUTH_URL` - Your Vercel domain (e.g., `https://your-app.vercel.app`)
-     - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
-     - Optional: Add SMTP variables for email notifications
-   
-4. **Run Database Migrations**:
-   ```bash
-   # Install Vercel CLI
-   npm i -g vercel
-   
-   # Run migration command
-   vercel env pull .env.local
-   npx prisma migrate deploy
-   npx prisma db seed
-   ```
-
-5. **Configure Cron** (Optional):
-   
-   Create `vercel.json` in project root:
-   ```json
-   {
-     "crons": [{
-       "path": "/api/cron/reminders",
-       "schedule": "0 8 * * *"
-     }]
-   }
-   ```
-
-### Deploying to Railway
-
-1. **Create New Project** on [railway.app](https://railway.app)
-
-2. **Add PostgreSQL Database**:
-   - Click "New" → "Database" → "PostgreSQL"
-   - Railway will automatically create `DATABASE_URL`
-
-3. **Deploy Application**:
-   - Click "New" → "GitHub Repo"
-   - Select your repository
-   - Railway will auto-detect Next.js
-
-4. **Configure Environment Variables**:
-   - `NEXTAUTH_URL` - Your Railway domain
-   - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
-   - Optional: Add SMTP variables
-
-5. **Run Database Setup**:
-   ```bash
-   railway run npx prisma migrate deploy
-   railway run npx prisma db seed
-   ```
-
-### Deploying with Docker
-
-For self-hosting or cloud VPS deployment:
+### 1. Push to GitHub
 
 ```bash
-# Build and run with docker-compose
-docker-compose up -d
-
-# Access at http://your-server-ip:3000
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin your-repo-url
+git push -u origin main
 ```
 
-**Important**: Update `DATABASE_URL` in `.env` to use `postgres:5432` (internal Docker DNS) instead of `localhost:5433`.
+### 2. Configure Database
+
+- Use [Neon](https://neon.tech/) for PostgreSQL (recommended for Vercel)
+- Copy your database connection string
+
+### 3. Deploy to Vercel
+
+- Visit [vercel.com](https://vercel.com) and import your GitHub repository
+- Add environment variables in Vercel dashboard:
+  - `DATABASE_URL` - Your Neon database URL
+  - `NEXTAUTH_URL` - Your Vercel domain (e.g., `https://your-app.vercel.app`)
+  - `NEXTAUTH_SECRET` - Generate with `openssl rand -base64 32`
+  - Optional: Add SMTP variables for email notifications
+
+### 4. Run Database Setup
+
+After deployment, set up the production database:
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Pull environment variables
+vercel env pull .env.local
+
+# Run migrations and seed
+npx prisma db push
+npx prisma db seed
+```
+
+### 5. Configure Cron (Optional)
+
+For daily habit reminders, create `vercel.json` in project root:
+
+```json
+{
+  "crons": [{
+    "path": "/api/cron/reminders",
+    "schedule": "0 8 * * *"
+  }]
+}
+```
 
 ### Post-Deployment Checklist
 
-- [ ] Update `NEXTAUTH_URL` to match your deployed domain
-- [ ] Set a secure `NEXTAUTH_SECRET`
-- [ ] Run `prisma migrate deploy` on production database
-- [ ] Run `prisma db seed` to create test users
-- [ ] Test authentication flow
-- [ ] Configure SMTP for production emails (or keep mock mode)
-- [ ] Set up cron job for daily reminders (Vercel cron, GitHub Actions, etc.)
+- [ ] Verify `NEXTAUTH_URL` matches your Vercel domain
+- [ ] Confirm `NEXTAUTH_SECRET` is set securely
+- [ ] Database migrations and seed completed successfully
+- [ ] Test login with reviewer credentials (see CREDENTIALS.md)
+- [ ] Configure SMTP for production emails (optional)
+- [ ] Set up Vercel cron for daily reminders (optional)
 - [ ] Update README with deployed URL
 
 ## License

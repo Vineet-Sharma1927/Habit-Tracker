@@ -12,6 +12,17 @@ enum Frequency {
 async function main() {
   const hashedPassword = await bcrypt.hash('TestPass123!', 10);
 
+  // Reviewer account with simple credentials
+  const reviewer = await prisma.user.upsert({
+    where: { email: 'reviewer@demo.com' },
+    update: {},
+    create: {
+      name: 'Reviewer',
+      email: 'reviewer@demo.com',
+      password: await bcrypt.hash('Review123', 10),
+    },
+  });
+
   const testUser = await prisma.user.upsert({
     where: { email: 'testuser@habittracker.com' },
     update: {},
@@ -309,6 +320,12 @@ async function main() {
   }
 
   console.log('Database seeded successfully');
+  console.log('');
+  console.log('=== REVIEWER CREDENTIALS ===');
+  console.log('Email: reviewer@demo.com');
+  console.log('Password: Review123');
+  console.log('');
+  console.log('Other Test Users:');
   console.log('Test User:', testUser.email, '- Password: TestPass123!');
   console.log('Demo User:', demoUser.email, '- Password: DemoPass123!');
   console.log('Alice:', alice.email, '- Password: TestPass123!');
