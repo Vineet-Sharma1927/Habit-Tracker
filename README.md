@@ -93,6 +93,77 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) and login with the credentials above.
 
+## Email Reminders
+
+The application includes an automated email reminder system for users with pending daily habits.
+
+### How It Works
+
+- Sends email reminders to users who have DAILY habits that haven't been checked in today
+- Runs via a cron job endpoint at `/api/cron/reminders`
+- Supports three modes: Mock (console log), Ethereal (test emails), and SMTP (real emails)
+
+### Configuration
+
+**1. Mock Mode (Default - No Configuration Needed)**
+- Emails are logged to console only
+- Perfect for development and testing
+- No SMTP credentials required
+
+**2. SMTP Mode (Production Email)**
+
+Add these variables to your `.env` file:
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+SMTP_FROM="Habit Tracker <noreply@habittracker.com>"
+```
+
+**For Gmail:**
+1. Enable 2-factor authentication
+2. Generate an App Password: [Google Account Settings](https://myaccount.google.com/apppasswords)
+3. Use the App Password as `SMTP_PASS`
+
+### Manual Testing
+
+Test the reminder system manually:
+
+```bash
+# Local development
+curl http://localhost:3000/api/cron/reminders
+
+# Production
+curl https://your-app.vercel.app/api/cron/reminders
+```
+
+### Automated Scheduling (Production)
+
+**Option 1: Vercel Cron (Recommended)**
+
+Create `vercel.json` in project root:
+
+```json
+{
+  "crons": [{
+    "path": "/api/cron/reminders",
+    "schedule": "0 8 * * *"
+  }]
+}
+```
+
+This runs daily at 8:00 AM UTC. Redeploy to Vercel after adding this file.
+
+**Option 2: External Cron Services**
+
+Use services like:
+- [cron-job.org](https://cron-job.org)
+- [EasyCron](https://www.easycron.com)
+
+Configure them to call: `https://your-app.vercel.app/api/cron/reminders`
+
 ## Environment Variables
 
 ### Required Variables
